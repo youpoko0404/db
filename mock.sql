@@ -2,9 +2,9 @@ DELETE FROM dbo.ProjectAssignments;
 DELETE FROM dbo.Employees;
 DELETE FROM dbo.Projects;
 
-INSERT INTO Employees
-    (FullName, Position, HireDate)
+INSERT INTO Employees(TenantId, FullName, Position, HireDate)
 SELECT
+	1,
     CONCAT('Employee ', v.number),
     CASE v.number % 5 
         WHEN 0 THEN 'Developer'
@@ -14,12 +14,7 @@ SELECT
         ELSE 'UX/UI'
     END,
     DATEADD(DAY, -v.number * 10, GETDATE())
-FROM (
-    SELECT TOP 50
-        ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS number
-    FROM sys.all_objects
-) v;
-
+FROM (SELECT TOP 50 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS number FROM sys.all_objects) v
 
 INSERT INTO Projects
     (ProjectName, Description, StartDate, EndDate)
@@ -28,11 +23,7 @@ SELECT
     CONCAT('This is the description for project ', v.number),
     DATEADD(DAY, -v.number * 5, GETDATE()),
     CASE WHEN v.number % 3 = 0 THEN NULL ELSE DATEADD(DAY, v.number * 2, GETDATE()) END
-FROM (
-    SELECT TOP 50
-        ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS number
-    FROM sys.all_objects
-) v;
+FROM (SELECT TOP 50 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS number FROM sys.all_objects) v;
 
 INSERT INTO ProjectAssignments (ProjectId, EmployeeId, Note)
 SELECT TOP 100
