@@ -14,6 +14,7 @@ GO
 CREATE TABLE Employees
 (
     EmployeeId INT IDENTITY(1,1) PRIMARY KEY,
+	TenantId INT NOT NULL,
     FullName NVARCHAR(150) NOT NULL,
     Position NVARCHAR(100),
     HireDate DATETIME,
